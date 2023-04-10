@@ -13,8 +13,7 @@ public class CameraMovement : MonoBehaviour
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;//move later
-        Cursor.visible = false;
+        
     }
 
     void Update()
