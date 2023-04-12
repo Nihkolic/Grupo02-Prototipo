@@ -6,36 +6,17 @@ using UnityEngine.UI;
 
 public class PlayerMovement_Esencial : MonoBehaviour
 {
-    
-    //public AudioSource pasos;
-    public bool Hactivo;
-    public bool Vactivo;
-    public bool Sactivo;
-
-    //public Slider staminaBar;
-    /*
-    public AudioSource cansancio;
-    public AudioSource correr;*/
+    [Header("Prototipo")]
+    [SerializeField] private TMP_Text estadoText;
+    [SerializeField] private TMP_Text isGroundedText;
+    [SerializeField] private TMP_Text velocidadText;
+    [SerializeField] private TMP_Text saltoText;
 
     [Header("Movement")]
     private float moveSpeed;
     public float walkSpeed;
     public float sprintSpeed;
     public float groundDrag;
-    /*
-    [Header("Stamina")]
-    public float Stamina = 100.0f;
-    public float MaxStamina = 100.0f;
-    [SerializeField]
-    private float StaminaRegenTimer = 0.0f;
-    [SerializeField]
-    private float StaminaDecreasePerFrame = 1.0f;
-    [SerializeField]
-    private float StaminaIncreasePerFrame = 5.0f;
-    [SerializeField]
-    private float StaminaTimeToRegen = 3.0f;
-    public TMP_Text staminaText;
-    */
 
     [Header("Jumping")]
     public float jumpForce;
@@ -77,11 +58,9 @@ public class PlayerMovement_Esencial : MonoBehaviour
 
     public MovementState state;
 
-    public enum MovementState
+    public enum MovementState //dashing, atacking
     {
         walking,
-        sprinting,
-        crouching,
         air
     }
 
@@ -103,6 +82,8 @@ public class PlayerMovement_Esencial : MonoBehaviour
 
     private void Update()
     {
+        ParaElPrototipo();
+
         //ground check
         //grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         grounded = Physics.CheckSphere(groundCheck.position, groundDistance, whatIsGround);
@@ -119,112 +100,6 @@ public class PlayerMovement_Esencial : MonoBehaviour
             rb.drag = 0;
 
         bool isRunning = Input.GetKey(KeyCode.LeftShift);
-        /*
-        if (isRunning)
-        {
-            Stamina = Mathf.Clamp(Stamina - (StaminaDecreasePerFrame * Time.deltaTime), 0.0f, MaxStamina);
-            StaminaRegenTimer = 0.0f;
-        }
-        else if (Stamina < MaxStamina)
-        {
-            if (StaminaRegenTimer >= StaminaTimeToRegen)
-                Stamina = Mathf.Clamp(Stamina + (StaminaIncreasePerFrame * Time.deltaTime), 0.0f, MaxStamina);
-            else
-                StaminaRegenTimer += Time.deltaTime;
-        }
-        if (Stamina <= 0)
-        {
-            if (!cansancio.isPlaying)
-            {
-                cansancio.Play();
-            }
-        }
-        else if (Stamina >= 50)
-        {
-            if (cansancio.isPlaying)
-            {
-                cansancio.Stop();
-            }
-        }
-        //staminaText.text = "Stamina: " + Stamina.ToString("0");
-
-        if (Input.GetButtonDown("Horizontal") && (!correr.isPlaying))
-        {
-
-            pasos.Play();
-            correr.Pause();
-
-        }
-        if (Input.GetButtonDown("Horizontal") && (Sactivo == true))
-        {
-
-            pasos.Pause();
-            correr.Play();
-
-        }
-
-        if (Input.GetButtonDown("Vertical") && (!correr.isPlaying))
-        {
-
-            pasos.Play();
-            correr.Pause();
-
-        }
-        if (Input.GetButtonDown("Vertical") && (Sactivo == true))
-        {
-
-            pasos.Pause();
-            correr.Play();
-
-        }
-
-        if (Input.GetKeyDown(sprintKey) && (Hactivo == true))
-        {
-
-            correr.Play();
-            pasos.Pause();
-
-        }
-
-        if (Input.GetKeyDown(sprintKey) && (Vactivo == true))
-        {
-
-            correr.Play();
-            pasos.Pause();
-
-        }
-
-        if (Input.GetButtonUp("Horizontal"))
-        {
-
-            pasos.Pause();
-            correr.Pause();
-
-        }
-
-        if (Input.GetButtonUp("Vertical"))
-        {
-
-            pasos.Pause();
-            correr.Pause();
-
-        }
-        if (Input.GetKeyUp(sprintKey) && (!pasos.isPlaying))
-        {
-            correr.Pause();
-        }
-
-        if (Input.GetKeyUp(sprintKey) && (Hactivo == true))
-        {
-            correr.Pause();
-            pasos.Play();
-        }
-
-        if (Input.GetKeyUp(sprintKey) && (Vactivo == true))
-        {
-            correr.Pause();
-            pasos.Play();
-        }*/
 
         if (transform.position.y > 1)
         {
@@ -232,8 +107,6 @@ public class PlayerMovement_Esencial : MonoBehaviour
             friccionFix.y = 1;
             transform.position = friccionFix;
         }
-
-        //staminaBar.value = Stamina;
     }
 
     private void FixedUpdate()
@@ -255,58 +128,12 @@ public class PlayerMovement_Esencial : MonoBehaviour
 
             Invoke(nameof(ResetJump), jumpCooldown);
         }
-
-        //start crouch
-        if (Input.GetKeyDown(crouchKey))
-        {
-            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-            rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
-        }
-
-        //stop crouch
-        if (!Input.GetKey(crouchKey) && state != MovementState.crouching && !roofed)
-        {
-            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
-        }
-
-        if (Input.GetButtonDown("Horizontal"))
-        {
-            Hactivo = true;
-        }
-
-
-        if (Input.GetButtonUp("Horizontal"))
-        {
-            Hactivo = false;
-        }
-
-
-        if (Input.GetButtonDown("Vertical"))
-        {
-            Vactivo = true;
-        }
-
-
-        if (Input.GetButtonUp("Vertical"))
-        {
-            Vactivo = false;
-        }
-
-        if (Input.GetKeyDown(sprintKey))
-        {
-            Sactivo = true;
-        }
-
-
-        if (Input.GetKeyUp(sprintKey))
-        {
-            Sactivo = false;
-        }
     }
 
     private void StateHandler()
     {
         // Mode - Crouching
+        /*
         if (Input.GetKey(crouchKey))
         {
             state = MovementState.crouching;
@@ -318,9 +145,9 @@ public class PlayerMovement_Esencial : MonoBehaviour
         {
             state = MovementState.sprinting;
             moveSpeed = sprintSpeed;
-        }
+        }*/
         // Mode - Walking
-        else if (grounded)
+         if (grounded)
         {
             state = MovementState.walking;
             moveSpeed = walkSpeed;
@@ -370,6 +197,11 @@ public class PlayerMovement_Esencial : MonoBehaviour
     {
         readyToJump = true;
     }
-
-
+    private void ParaElPrototipo()
+    {
+        estadoText.text = "Estado: " + state.ToString();
+        isGroundedText.text = "isGrounded: " + grounded.ToString();
+        velocidadText.text = "velocidad: " + walkSpeed.ToString();
+        saltoText.text = "salto: " +jumpForce.ToString();
+    }
 }
