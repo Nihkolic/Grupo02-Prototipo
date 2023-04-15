@@ -23,11 +23,11 @@ public class PlayerMovement_Esencial : MonoBehaviour
     public float jumpCooldown;
     public float airMultiplier;
     bool readyToJump;
-
+    /*
     [Header("Crouching")]
     public float crouchSpeed;
     public float crouchYScale;
-    private float startYScale;
+    private float startYScale;*/
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
@@ -75,7 +75,7 @@ public class PlayerMovement_Esencial : MonoBehaviour
         //jump
         readyToJump = true;
 
-        startYScale = transform.localScale.y;
+        //startYScale = transform.localScale.y;
 
         isRunning = false;
     }
