@@ -15,7 +15,6 @@ public class PlayerMovement_Esencial : MonoBehaviour
     [Header("Movement")]
     private float moveSpeed;
     public float walkSpeed;
-    public float sprintSpeed;
     public float groundDrag;
 
     [Header("Jumping")]
@@ -23,21 +22,12 @@ public class PlayerMovement_Esencial : MonoBehaviour
     public float jumpCooldown;
     public float airMultiplier;
     bool readyToJump;
-    /*
-    [Header("Crouching")]
-    public float crouchSpeed;
-    public float crouchYScale;
-    private float startYScale;*/
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
-    public KeyCode sprintKey = KeyCode.LeftShift;
-    public KeyCode crouchKey = KeyCode.LeftControl;
+    //public KeyCode dashKey = KeyCode.LeftShift;
 
     [Header("Distance Check")]
-    /*public float playerHeight;
-    public LayerMask whatIsGround;
-    bool grounded;*/
     public Transform groundCheck;
     public Transform headCheck;
     public float groundDistance = 0.1f;
@@ -64,28 +54,19 @@ public class PlayerMovement_Esencial : MonoBehaviour
         air
     }
 
-    public bool isRunning;
-
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
-        //staminaBar.maxValue = MaxStamina;
 
         //jump
         readyToJump = true;
-
-        //startYScale = transform.localScale.y;
-
-        isRunning = false;
     }
 
     private void Update()
     {
         ParaElPrototipo();
 
-        //ground check
-        //grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         grounded = Physics.CheckSphere(groundCheck.position, groundDistance, whatIsGround);
         roofed = Physics.CheckSphere(headCheck.position, headDistance, whatIsObstacle);
 
@@ -132,21 +113,6 @@ public class PlayerMovement_Esencial : MonoBehaviour
 
     private void StateHandler()
     {
-        // Mode - Crouching
-        /*
-        if (Input.GetKey(crouchKey))
-        {
-            state = MovementState.crouching;
-            moveSpeed = crouchSpeed;
-        }
-
-        // Mode - Sprinting
-        else if (grounded && Input.GetKey(sprintKey))
-        {
-            state = MovementState.sprinting;
-            moveSpeed = sprintSpeed;
-        }*/
-        // Mode - Walking
          if (grounded)
         {
             state = MovementState.walking;
