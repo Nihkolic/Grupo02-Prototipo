@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class PlayerMovement_Esencial : MonoBehaviour
 {
-    [Header("Prototipo")]
+    [Header("Prototipo")] 
     [SerializeField] private TMP_Text estadoText;
     [SerializeField] private TMP_Text isGroundedText;
     [SerializeField] private TMP_Text velocidadText;
@@ -14,40 +14,26 @@ public class PlayerMovement_Esencial : MonoBehaviour
 
     [Header("Movement")]
     private float moveSpeed;
-    public float walkSpeed;
-    public float sprintSpeed;
-    public float groundDrag;
+    [SerializeField] private float walkSpeed;
+    [SerializeField] private float groundDrag;
 
     [Header("Jumping")]
-    public float jumpForce;
-    public float jumpCooldown;
-    public float airMultiplier;
+    [SerializeField] private float jumpForce;
+    [SerializeField] private float jumpCooldown;
+    [SerializeField] private float airMultiplier;
     bool readyToJump;
-    /*
-    [Header("Crouching")]
-    public float crouchSpeed;
-    public float crouchYScale;
-    private float startYScale;*/
 
     [Header("Keybinds")]
-    public KeyCode jumpKey = KeyCode.Space;
-    public KeyCode sprintKey = KeyCode.LeftShift;
-    public KeyCode crouchKey = KeyCode.LeftControl;
+    [SerializeField] private KeyCode jumpKey = KeyCode.Space;
+    //public KeyCode dashKey = KeyCode.LeftShift;
 
     [Header("Distance Check")]
-    /*public float playerHeight;
-    public LayerMask whatIsGround;
-    bool grounded;*/
-    public Transform groundCheck;
-    public Transform headCheck;
-    public float groundDistance = 0.1f;
-    public float headDistance = 1.0f;
-    public LayerMask whatIsGround;
-    public LayerMask whatIsObstacle;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundDistance = 0.1f;
+    [SerializeField] private LayerMask whatIsGround;
     bool grounded;
-    bool roofed;
 
-    public Transform orientation;
+    [SerializeField] private Transform orientation;
 
     float horizontalInput;
     float verticalInput;
@@ -56,7 +42,7 @@ public class PlayerMovement_Esencial : MonoBehaviour
 
     Rigidbody rb;
 
-    public MovementState state;
+    [SerializeField] private MovementState state;
 
     public enum MovementState //dashing, atacking
     {
@@ -64,30 +50,20 @@ public class PlayerMovement_Esencial : MonoBehaviour
         air
     }
 
-    public bool isRunning;
-
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
-        //staminaBar.maxValue = MaxStamina;
 
         //jump
         readyToJump = true;
-
-        //startYScale = transform.localScale.y;
-
-        isRunning = false;
     }
 
     private void Update()
     {
         ParaElPrototipo();
 
-        //ground check
-        //grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         grounded = Physics.CheckSphere(groundCheck.position, groundDistance, whatIsGround);
-        roofed = Physics.CheckSphere(headCheck.position, headDistance, whatIsObstacle);
 
         MyInput();
         SpeedControl();
@@ -98,8 +74,6 @@ public class PlayerMovement_Esencial : MonoBehaviour
             rb.drag = groundDrag;
         else
             rb.drag = 0;
-
-        bool isRunning = Input.GetKey(KeyCode.LeftShift);
 
         if (transform.position.y > 1)
         {
@@ -132,21 +106,6 @@ public class PlayerMovement_Esencial : MonoBehaviour
 
     private void StateHandler()
     {
-        // Mode - Crouching
-        /*
-        if (Input.GetKey(crouchKey))
-        {
-            state = MovementState.crouching;
-            moveSpeed = crouchSpeed;
-        }
-
-        // Mode - Sprinting
-        else if (grounded && Input.GetKey(sprintKey))
-        {
-            state = MovementState.sprinting;
-            moveSpeed = sprintSpeed;
-        }*/
-        // Mode - Walking
          if (grounded)
         {
             state = MovementState.walking;
