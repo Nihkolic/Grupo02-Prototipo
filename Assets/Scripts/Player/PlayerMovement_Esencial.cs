@@ -16,6 +16,7 @@ public class PlayerMovement_Esencial : MonoBehaviour
     private float moveSpeed;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float groundDrag;
+    [SerializeField] private bool dashing; //
 
     [Header("Jumping")]
     [SerializeField] private float jumpForce;
@@ -25,7 +26,7 @@ public class PlayerMovement_Esencial : MonoBehaviour
 
     [Header("Keybinds")]
     [SerializeField] private KeyCode jumpKey = KeyCode.Space;
-    //public KeyCode dashKey = KeyCode.LeftShift;
+    //[SerializeField] private KeyCode dashKey = KeyCode.LeftShift;
 
     [Header("Distance Check")]
     [SerializeField] private Transform groundCheck;
@@ -47,7 +48,8 @@ public class PlayerMovement_Esencial : MonoBehaviour
     public enum MovementState //dashing, atacking
     {
         walking,
-        air
+        air,
+        dashing
     }
 
     private void Start()
@@ -70,17 +72,17 @@ public class PlayerMovement_Esencial : MonoBehaviour
         StateHandler();
 
         //handle drag
-        if (grounded)
+        if (state == MovementState.walking)
             rb.drag = groundDrag;
         else
             rb.drag = 0;
-
+        /*
         if (transform.position.y > 1)
         {
             Vector3 friccionFix = transform.position;
             friccionFix.y = 1;
             transform.position = friccionFix;
-        }
+        }*/
     }
 
     private void FixedUpdate()
@@ -93,7 +95,6 @@ public class PlayerMovement_Esencial : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        //when to jump
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
             readyToJump = false;
