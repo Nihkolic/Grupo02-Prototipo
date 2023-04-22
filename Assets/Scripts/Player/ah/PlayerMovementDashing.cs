@@ -5,11 +5,12 @@ using TMPro;
 
 public class PlayerMovementDashing : MonoBehaviour
 {
+    
+
     [Header("Movement")]
     private float moveSpeed;
     public float walkSpeed;
     //public float sprintSpeed;
-
     public float dashSpeed;
     public float dashSpeedChangeFactor;
 
@@ -63,6 +64,12 @@ public class PlayerMovementDashing : MonoBehaviour
 
     public bool dashing;
 
+    [Header("Prototipo")]
+    [SerializeField] private TMP_Text estadoText;
+    [SerializeField] private TMP_Text dashText;
+    [SerializeField] private TMP_Text velocidadText;
+    [SerializeField] private TMP_Text saltoText;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -88,7 +95,7 @@ public class PlayerMovementDashing : MonoBehaviour
         else
             rb.drag = 0;
 
-        
+        ParaElPrototipo();
     }
 
     private void FixedUpdate()
@@ -304,6 +311,12 @@ public class PlayerMovementDashing : MonoBehaviour
         return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
 
-
+    private void ParaElPrototipo()
+    {
+        estadoText.text = "Estado : " + state.ToString();
+        dashText.text = "- Dash: " + dashSpeed.ToString();
+        velocidadText.text = "- Velocidad: " + walkSpeed.ToString();
+        saltoText.text = "- Salto: " + jumpForce.ToString();
+    }
 
 }

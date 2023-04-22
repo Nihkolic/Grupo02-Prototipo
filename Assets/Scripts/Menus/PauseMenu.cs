@@ -8,10 +8,12 @@ public class PauseMenu : MonoBehaviour
 {
     public static bool GameIsPaused = false;
     [SerializeField] private GameObject pauseMenuUI;
-
+    [SerializeField] private GameObject mainMenuUI;
     private void Start()
     {
         Resume();
+
+
     }
     private void Update()
     {
@@ -42,10 +44,13 @@ public class PauseMenu : MonoBehaviour
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex);
     }
-    public void NextScene()
+    public void ChangeScene()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentSceneIndex+1);
+        if(currentSceneIndex==1)
+            SceneManager.LoadScene(2);
+        else if(currentSceneIndex == 2)
+            SceneManager.LoadScene(1);
     }
 
     void Pause()
