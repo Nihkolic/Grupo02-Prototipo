@@ -15,16 +15,30 @@ public class DetectionArea : MonoBehaviour
     public float timeToShoot = 1.3f;
     float originalTime;
     private bool isShooting = false;
+    [SerializeField] private float distance;
 
 
     void Start()
     {
+        target = GameObject.Find("Player");
         originalTime = timeToShoot;
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, distance);
+    }
     // Update is called once per frame
     void Update()
     {
+        if (Vector3.Distance(transform.position,target.transform.position) < distance)
+        {
+            detected = true;
+        }
+        else
+        {
+            detected = false;
+        }
         if (detected)
         {
             enemy.LookAt(target.transform);
@@ -39,14 +53,14 @@ public class DetectionArea : MonoBehaviour
 
             if (timeToShoot < 0)
             {
-                InvokeRepeating("ShootPlayer", 0.0f, 5.0f);
-                //ShootPlayer();
+                //InvokeRepeating("ShootPlayer", 0.0f, 5.0f);
+                StartCoroutine(ShootPlayer());
                 timeToShoot = originalTime;
             }
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    /*private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
@@ -60,24 +74,21 @@ public class DetectionArea : MonoBehaviour
         {
             detected = false;
         }
-    }
+    }*/
 
-    private void ShootPlayer()
+    private IEnumerator ShootPlayer()
     {
-        if (isShooting)
-        {
-            isShooting = false;
-        }
-        else
+        for (int i = 1; i <=3; i++)
         {
             GameObject currentBullet = Instantiate(bullet, shootPoint.position, shootPoint.rotation);
             Rigidbody rig = currentBullet.GetComponent<Rigidbody>();
 
             rig.AddForce(transform.forward * shootSpeed, ForceMode.VelocityChange);
-            Invoke("DeacivatedTurret", 5.0f);
+            yield return new WaitForSeconds(0.25f);
 
-            isShooting = true;
-        }
+        } 
+
+           
     }
 
     private void DeacivatedTurret()
