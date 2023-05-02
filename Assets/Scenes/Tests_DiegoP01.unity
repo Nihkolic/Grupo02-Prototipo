@@ -19905,6 +19905,11 @@ PrefabInstance:
       propertyPath: distance
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 2717662697602323300, guid: 99b1c38dcf95da64db833c5885ddb8ab,
+        type: 3}
+      propertyPath: timeToShoot
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2717662698849657400, guid: 99b1c38dcf95da64db833c5885ddb8ab,
         type: 3}
       propertyPath: m_RootOrder
