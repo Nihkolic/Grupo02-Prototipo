@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class DetectionArea : MonoBehaviour
 {
 
     [SerializeField] private LayerMask playerLayerMask;
+    [SerializeField] private float distance;
     bool detected;
     GameObject target;
     public Transform enemy;
@@ -15,18 +17,47 @@ public class DetectionArea : MonoBehaviour
     public float timeToShoot = 1.3f;
     float originalTime;
     private bool isShooting = false;
-    [SerializeField] private float distance;
+    private bool enableShooting = true;
+
+    [SerializeField] private List<Transform> points;
+    [SerializeField] private NavMeshAgent IA2;
+    [SerializeField] private float distance2;
+    private bool running = false;
+    
 
 
     void Start()
     {
         target = GameObject.Find("Player");
         originalTime = timeToShoot;
+
+        StartCoroutine(RunningLogic());
     }
 
+    private IEnumerator RunningLogic()
+    {
+        while (true)
+        {
+            while(Vector3.Distance(transform.position, target.transform.position) > distance2)
+            {
+                yield return null;
+            }
+            Vector3 position = points[Random.Range(0, points.Count)].position;
+            IA2.SetDestination(position);
+            IA2.isStopped = false;
+            enableShooting = false;
+            while (Vector3.Distance(transform.position, position) > 1)
+            {
+                yield return null;
+            }
+            enableShooting = true;
+            IA2.isStopped = true;
+        }
+    }
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, distance);
+        Gizmos.DrawWireSphere(transform.position, distance2);
     }
     // Update is called once per frame
     void Update()
@@ -80,11 +111,14 @@ public class DetectionArea : MonoBehaviour
     {
         for (int i = 1; i <=3; i++)
         {
-            GameObject currentBullet = Instantiate(bullet, shootPoint.position, shootPoint.rotation);
-            Rigidbody rig = currentBullet.GetComponent<Rigidbody>();
+            if (enableShooting)
+            {
+                GameObject currentBullet = Instantiate(bullet, shootPoint.position, shootPoint.rotation);
+                Rigidbody rig = currentBullet.GetComponent<Rigidbody>();
 
-            rig.AddForce(transform.forward * shootSpeed, ForceMode.VelocityChange);
-            yield return new WaitForSeconds(0.25f);
+                rig.AddForce(transform.forward * shootSpeed, ForceMode.VelocityChange);
+                yield return new WaitForSeconds(0.25f);
+            }
 
         } 
 
